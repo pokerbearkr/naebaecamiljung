@@ -2,7 +2,9 @@ package com.example.schedule.controller;
 
 import com.example.schedule.dto.CommentRequestDto;
 import com.example.schedule.dto.CommentResponseDto;
+import com.example.schedule.entity.Users;
 import com.example.schedule.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +22,12 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
             @RequestParam Long scheduleId,
-            @RequestParam Long userId,
-            @Valid @RequestBody CommentRequestDto requestDto) {
+            @Valid @RequestBody CommentRequestDto requestDto,
+            HttpServletRequest request) {
+
+        Users users = (Users) request.getSession().getAttribute("user");
+        Long userId = users.getId();
+
         return ResponseEntity.ok(commentService.createComment(scheduleId, userId, requestDto));
     }
 
